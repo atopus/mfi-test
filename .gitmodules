@@ -1,0 +1,6 @@
+[submodule "backend"]
+	path = backend
+	url = ./backend
+[submodule "front"]
+	path = front
+	url = ./front
