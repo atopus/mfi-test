@@ -1,4 +1,10 @@
-# FROM nginx:latest
+FROM nginx:latest
 
-# COPY ./index.html /usr/share/nginx/html/index.html
-# COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY mfi-nginx.conf /etc/nginx/sites-available/
+
+RUN mkdir -p /etc/nginx/sites-enabled/\
+    && ln -s /etc/nginx/sites-available/mfi-nginx.conf /etc/nginx/sites-enabled/\
+    && rm /etc/nginx/conf.d/default.conf
+
+CMD ["nginx", "-g", "daemon off;"]
