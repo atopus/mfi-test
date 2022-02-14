@@ -14,8 +14,7 @@ services:
       interval: 10s
       timeout: 1m30s
       retries: 10
-    networks:
-      - db
+    restart: on-failure
 
   backend:
     build: ./backend
@@ -26,25 +25,17 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_PORT=5432
       - POSTGRES_HOST=db
-      - ALLOWED_HOST=*
+      - ALLOWED_HOST=localhost
       - STATIC_ROOT=/code/static
       - STATIC_URL=api/static/
       - ENV=prod
     ports:
       - "8000:8000"
     command: bash -c '/code/deploy/run.sh'
-    # restart: on-failure
+    restart: on-failure
     depends_on:
       db:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "curl -v --silent http://localhost:8000 2>&1 | grep 200"]
-      interval: 40s
-      timeout: 30s
-      retries: 5
-    networks:
-      - backend
-      - db
     volumes:
       - deploy:/code/deploy
       - api-statics:/code/static
@@ -52,10 +43,8 @@ services:
   frontend:
     build: ./front
     container_name: mfi-frontend
-    command: npm start
-    environment:
-      - REACT_APP_API_HOST=localhost
-      - REACT_APP_API_PORT=8080
+    command: serve -s /app/build
+    restart: on-failure
     ports:
       - "3000:3000"
     depends_on:
@@ -65,9 +54,7 @@ services:
       interval: 20s
       timeout: 1m
       retries: 5
-    networks:
-      - frontend
-    
+ 
   nginx:
     build: ./nginx
     container_name: mfi-nginx
@@ -81,20 +68,10 @@ services:
     depends_on:
       frontend:
         condition: service_healthy
-      # backend:
-      #   condition: service_healthy
     restart: on-failure
     ports:
-    - "8080:8080"
-    networks:
-      - backend
-      - frontend
+      - "8080:8080"
 
-
-networks:
-  frontend:
-  backend:
-  db:
 volumes:
   deploy:
   api-statics:
