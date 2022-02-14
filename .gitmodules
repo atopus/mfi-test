@@ -1,6 +1,6 @@
 [submodule "backend"]
 	path = backend
-	url = ./backend
+	url = ../mfi-backend.git
 [submodule "front"]
 	path = front
-	url = ./front
+	url = ../mfi-front.git
