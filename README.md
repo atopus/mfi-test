@@ -89,6 +89,7 @@ As an illustration, let's assume that you want to deploy this application at the
 * [ ] Show data credits from the map or the popup;
 * [ ] Why is `serve` running on port 3000 (expected 5000) ?;
 * [ ] Use pure static for front app;
+* [ ] Add log & trap service (Sentry ?)
 
 ## Contact
 
