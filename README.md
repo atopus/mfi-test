@@ -39,21 +39,30 @@ _Requirements: docker & docker-compose_
 
 As an illustration, let's assume that you want to deploy this application at the following url: peak.mysite.com,
 
-1. In `/front/Dockerfile`, set `REACT_API_HOST` and the `REACT_API_PORT` according to the public url (most probably on port 80). E.g.
+
+1. Create a `localsettings` file in `backend/backend`, and provide at least a `SECRET_KEY` variable like this:
+
+    ```py
+    SECRET_KEY = "Kd8:/..." # <= Mandatory. fill at least a line with random and various caracters, except \, ' and ".
+    ENV = 'production'  # Optional
+    DEBUG = False  # Optional
+    ```
+
+2. In `/front/Dockerfile`, set `REACT_API_HOST` and the `REACT_API_PORT` according to the public url (most probably on port 80). E.g.
 
     ```dockerfile
     ENV REACT_APP_API_HOST=peak.mysite.com,
     ENV REACT_APP_API_PORT=80
     ```
 
-2. Then, from the project directory, run the docker-compose command as a daemon:
+3. Then, from the project directory, run the docker-compose command as a daemon:
 
     ```
     $ docker-compose up -d
     ```
 
-3. Eventually, add a proxy-pass towards the `nginx` container.
-    
+4. Eventually, add a proxy-pass towards the `nginx` container.
+
     The application comes with an `nginx` container which takes care of the redirection to the `backend` and the `front` containers, as well as the static files.
 
     For instance, if an nginx server is used in front of your server, you may use:
